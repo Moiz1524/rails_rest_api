@@ -4,7 +4,11 @@ class UsersController < ApplicationController
   # GET /users
   def index
     @users = User.all
-    render json: @users
+    if @users.present?
+      render json: @users, status: 200
+    else
+      render json: { message: 'No users exists.' }, status: 404
+    end
   end
 
   # GET /users/new
@@ -18,7 +22,7 @@ class UsersController < ApplicationController
     if @user.save
       render json: @user, status: 200
     else
-      render error: { message: 'Unable to create User.' }, status: 400
+      render json: { message: 'Unable to create User.' }, status: 400
       @user.errors.full_messages
     end
   end
@@ -32,13 +36,18 @@ class UsersController < ApplicationController
     if @user.update_attributes(user_params)
       render json: { message: 'User updated successfully.' }, status: 200
     else
-      render error: { message: 'Unable to update User.' }, status: 400
+      render json: { message: 'Unable to update User.' }, status: 400
     end
   end
 
   # GET /user/:id
   def show
-    render json: @user
+    if @user.present?
+      render json: @user, status: 200
+    else
+      puts 'I am running.'
+      render json: { message: 'Cannot find the user you are looking for.' }, status: 404
+    end
   end
 
   # DELETE /users/:id
@@ -46,7 +55,7 @@ class UsersController < ApplicationController
     if @user.destroy
       render json: { message: 'User destroyed successfully.' } , status: 200
     else
-      render error: { message: 'Unable to destroy User.' }, status: 400
+      render json: { message: 'Unable to destroy User.' }, status: 400
     end
   end
 

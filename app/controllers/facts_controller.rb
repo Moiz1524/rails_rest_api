@@ -4,7 +4,11 @@ class FactsController < ApplicationController
   # GET /facts
   def index
     @facts = Fact.all
-    render json: @facts, status: 200
+    if @facts.present?
+      render json: @facts, status: 200
+    else
+      render json: { message: 'No facts exist.' }, status: 404
+    end
   end
 
   # GET /facts/new
@@ -18,7 +22,7 @@ class FactsController < ApplicationController
     if @fact.save
       render json: @fact, status: 200
     else
-      render error: { message: 'Unable to create Fact.' }, status: 400
+      render json: { message: 'Unable to create Fact.' }, status: 400
       puts @fact.errors.full_messages
     end
   end
@@ -32,13 +36,17 @@ class FactsController < ApplicationController
     if @fact.update_attributes(fact_params)
       render json: { message: 'Fact updated successfully.' }, status: 200
     else
-      render error: { message: 'Unable to update Fact.' }, status: 400
+      render json: { message: 'Unable to update Fact.' }, status: 400
     end
   end
 
   # GET /facts/:id
   def show
-    render json: @fact
+    if @fact.present?
+      render json: @fact, status: 200
+    else
+      render json: { message: 'Cannot find the fact you are looking for.' }, status: 404
+    end
   end
 
   # DELETE /facts/:id
@@ -46,7 +54,7 @@ class FactsController < ApplicationController
     if @fact.destroy
       render json: { :message => 'Fact destroyed successfully.' }, status: 200
     else
-      render error: { :message => 'Unable to destroy Fact.' }, status: 400
+      render json: { :message => 'Unable to destroy Fact.' }, status: 400
     end
   end
 
