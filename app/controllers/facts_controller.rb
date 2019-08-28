@@ -1,4 +1,5 @@
 class FactsController < ApplicationController
+  before_action :authorize_request
   before_action :find_fact, :only => [:show, :edit, :update, :destroy]
 
   # GET /facts
