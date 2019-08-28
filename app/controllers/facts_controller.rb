@@ -1,5 +1,5 @@
 class FactsController < ApplicationController
-  before_action :authorize_request
+  before_action :authorize_request, :except => :index
   before_action :find_fact, :only => [:show, :edit, :update, :destroy]
 
   # GET /facts
@@ -52,10 +52,14 @@ class FactsController < ApplicationController
 
   # DELETE /facts/:id
   def destroy
-    if @fact.destroy
-      render json: { :message => 'Fact destroyed successfully.' }, status: 200
+    if @fact.user_id == @current_user.id
+      if @fact.destroy
+        render json: { :message => 'Fact destroyed successfully.' }, status: 200
+      else
+        render json: { :message => 'Unable to destroy Fact.' }, status: 400
+      end
     else
-      render json: { :message => 'Unable to destroy Fact.' }, status: 400
+      render json: { :message => 'You cannot destroy another user fact.' }, status: 400
     end
   end
 

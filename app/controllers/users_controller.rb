@@ -24,7 +24,7 @@ class UsersController < ApplicationController
       render json: @user, status: 200
     else
       render json: { message: 'Unable to create User.' }, status: 400
-      @user.errors.full_messages
+      puts @user.errors.full_messages
     end
   end
 

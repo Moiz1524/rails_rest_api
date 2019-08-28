@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::API
   rescue_from ActiveRecord::RecordNotFound, :with => :record_not_found
 
-  def not_available
-    render json: { :error => 'Not available' }
+  def not_found
+    render json: { :error => 'Not found' }
   end
 
   def authorize_request
