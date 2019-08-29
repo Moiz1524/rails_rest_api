@@ -20,6 +20,7 @@ class FactsController < ApplicationController
   # POST /facts
   def create
     @fact = Fact.new(fact_params)
+    @fact.user_id = @current_user.id
     if @fact.save
       render json: @fact, status: 200
     else
